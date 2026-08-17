@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f1e7">
+  <title>Dulce Crema — Recetario operativo</title>
+  <style>
+    :root {
+      --ivory: #fbf6ee;
+      --vanilla: #f6ecdf;
+      --powder: #d990a3;
+      --pink: #c96f88;
+      --pink-deep: #a84f6a;
+      --caramel: #c7a07a;
+      --caramel-soft: #ead8c3;
+      --charcoal: #302a29;
+      --muted: #756965;
+      --line: #e7d8ca;
+      --white: #fffdf9;
+      --green: #6e8b72;
+      --shadow: 0 16px 50px rgba(93, 61, 49, .11);
+      --round-lg: 28px;
+      --round-md: 18px;
+      --serif: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+      --sans: Inter, Montserrat, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--charcoal);
+      background:
+        radial-gradient(circle at 12% 5%, rgba(223, 166, 178, .2), transparent 20rem),
+        radial-gradient(circle at 90% 30%, rgba(234, 216, 195, .52), transparent 26rem),
+        var(--ivory);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid rgba(201, 111, 136, .55);
+      outline-offset: 3px;
+    }
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .page-ribbon {
+      position: fixed; z-index: -1; width: 34vw; max-width: 560px; min-width: 230px; height: 5.5rem;
+      border: 1px solid rgba(201, 111, 136, .24); border-radius: 50%; opacity: .7;
+      pointer-events: none;
+    }
+    .ribbon-one { top: 20rem; left: -12rem; transform: rotate(15deg); }
+    .ribbon-two { right: -16rem; top: 44rem; transform: rotate(-23deg); }
+
+    .shell { max-width: 1210px; margin: 0 auto; padding: 24px clamp(18px, 4vw, 54px) 64px; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 18px;
+      padding: 2px 0 25px;
+    }
+    .mini-brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 1.12rem; font-weight: 700; }
+    .mini-brand::before { content: ""; width: 12px; height: 12px; border: 3px solid var(--pink); border-radius: 50% 50% 45% 45%; box-shadow: 6px -3px 0 -3px var(--green); }
+    .topbar-note { color: var(--muted); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+
+    .hero {
+      display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(250px, .85fr); gap: clamp(28px, 5vw, 68px);
+      align-items: center; min-height: 410px; padding: clamp(30px, 6vw, 70px); overflow: hidden;
+      border: 1px solid rgba(199, 160, 122, .32); border-radius: 36px; position: relative;
+      background: linear-gradient(124deg, rgba(255,253,249,.92), rgba(248,231,230,.8)); box-shadow: var(--shadow);
+    }
+    .hero::before {
+      content: ""; position: absolute; width: 360px; height: 95px; bottom: -42px; right: -72px; border: 17px solid rgba(201, 111, 136, .18);
+      border-radius: 50%; transform: rotate(-9deg); pointer-events: none;
+    }
+    .hero::after {
+      content: ""; position: absolute; width: 9px; height: 9px; left: 48%; bottom: 52px; border-radius: 50%; background: var(--pink); box-shadow: 24px 22px 0 -1px var(--caramel), -32px 13px 0 -1px rgba(201,111,136,.55); opacity: .7;
+    }
+    .eyebrow { margin: 0 0 15px; color: var(--pink-deep); font-size: .73rem; font-weight: 750; letter-spacing: .15em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 650px; margin-bottom: 13px; font-family: var(--serif); font-size: clamp(3.25rem, 7vw, 6.65rem); line-height: .88; letter-spacing: -.06em; }
+    h1 span { display: block; color: var(--pink); font-style: italic; }
+    .hero-copy { max-width: 510px; margin-bottom: 28px; color: #5e5250; font-size: clamp(1rem, 1.7vw, 1.17rem); }
+    .search-box { display: flex; align-items: center; gap: 12px; max-width: 590px; padding: 8px 9px 8px 18px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 253, 249, .94); box-shadow: 0 8px 24px rgba(94, 69, 58, .06); }
+    .search-icon { flex: 0 0 auto; color: var(--pink-deep); font-size: 1.05rem; }
+    .search-box input { min-width: 0; flex: 1; padding: 10px 0; border: 0; outline: 0; color: var(--charcoal); background: transparent; }
+    .search-box input::placeholder { color: #a19691; }
+    .clear-search { display: none; flex: 0 0 auto; width: 36px; height: 36px; border: 0; border-radius: 50%; color: var(--pink-deep); background: #f8e5e9; }
+    .clear-search.is-visible { display: grid; place-items: center; }
+
+    .hero-visual { position: relative; min-height: 285px; display: grid; place-items: center; }
+    .dessert-plate { position: relative; width: min(260px, 74vw); aspect-ratio: 1 / .68; border-radius: 50%; background: linear-gradient(145deg, #e8d0b9, #b98d68); box-shadow: inset 0 9px 18px rgba(255,255,255,.44), 0 22px 30px rgba(99, 60, 44, .16); }
+    .cream-swell { position: absolute; width: 78%; height: 90%; left: 11%; bottom: 16%; border-radius: 52% 50% 18% 18% / 68% 65% 22% 22%; background: linear-gradient(133deg, #fffdf8 0%, #f6e8db 47%, #e9cebd 100%); transform: rotate(-2deg); box-shadow: inset -13px -7px 17px rgba(195, 150, 120, .12); }
+    .cream-swell::before, .cream-swell::after { content: ""; position: absolute; border-radius: 50%; background: #fffdfa; }
+    .cream-swell::before { width: 39%; height: 30%; left: 1%; top: 8%; transform: rotate(-16deg); }
+    .cream-swell::after { width: 36%; height: 29%; right: 2%; top: 2%; transform: rotate(22deg); }
+    .berry { position: absolute; width: 48px; height: 50px; border-radius: 52% 48% 53% 47%; background: linear-gradient(145deg, #e98ea0, #bc536e); box-shadow: inset 6px 6px 9px rgba(255,255,255,.25), 0 8px 13px rgba(120,46,64,.2); }
+    .berry::before { content: "✦"; position: absolute; top: -21px; left: 13px; color: var(--green); font-size: 24px; transform: rotate(15deg); }
+    .berry::after { content: "· · ·"; position: absolute; left: 12px; top: 14px; color: rgba(255,255,255,.62); letter-spacing: 1px; font-size: 12px; transform: rotate(73deg); }
+    .berry-one { top: 16px; right: 20px; transform: rotate(11deg); }
+    .berry-two { bottom: 14px; left: 12px; width: 36px; height: 38px; transform: rotate(-26deg); }
+    .visual-label { position: absolute; top: 14px; left: -2px; padding: 10px 13px; border: 1px solid rgba(199,160,122,.48); border-radius: 14px; color: #86694e; background: rgba(255,253,249,.84); box-shadow: 0 8px 18px rgba(104,74,55,.08); font-family: var(--serif); font-size: .95rem; transform: rotate(-4deg); }
+
+    .dashboard { margin-top: 34px; }
+    .overview {
+      display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; padding: 18px 21px; border: 1px solid var(--line); border-radius: var(--round-md); background: rgba(255,253,249,.78);
+    }
+    .overview h2 { margin: 0; font-family: var(--serif); font-size: 1.55rem; }
+    .overview-text { margin: 0; color: var(--muted); font-size: .88rem; }
+    .overview-bar { height: 9px; min-width: 90px; overflow: hidden; border-radius: 999px; background: #efe3d6; }
+    .overview-bar > span { display: block; height: 100%; width: var(--value); border-radius: inherit; background: linear-gradient(90deg, var(--pink), #e5a3b2); transition: width .25s ease; }
+    .overview-number { min-width: 87px; color: var(--pink-deep); font-family: var(--serif); font-size: 1.25rem; font-weight: 700; text-align: right; }
+
+    .continue-section { margin-top: 32px; }
+    .section-header { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 15px; }
+    .section-header h2 { margin: 0; font-family: var(--serif); font-size: clamp(1.72rem, 3vw, 2.15rem); letter-spacing: -.03em; }
+    .section-header p { margin: 0; color: var(--muted); font-size: .88rem; text-align: right; }
+    .continue-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .continue-card { display: flex; align-items: center; gap: 13px; padding: 16px; border: 1px solid #eed7dc; border-radius: 16px; color: inherit; background: #fff9fa; text-align: left; transition: transform .2s ease, box-shadow .2s ease; }
+    .continue-card:hover { transform: translateY(-2px); box-shadow: 0 11px 25px rgba(126, 67, 79, .1); }
+    .continue-card strong { display: block; font-size: .93rem; }
+    .continue-card span { display: block; color: var(--muted); font-size: .78rem; }
+    .mini-ring { --p: 0%; width: 42px; height: 42px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--pink) var(--p), #f0dfe2 0); }
+    .mini-ring::after { content: ""; width: 31px; height: 31px; border-radius: 50%; background: #fff9fa; }
+    .empty-continue { padding: 18px 20px; border: 1px dashed #dbc6b7; border-radius: 16px; color: var(--muted); background: rgba(255,253,249,.44); font-size: .91rem; }
+
+    .recipe-library { margin-top: 47px; }
+    .filter-row { display: flex; gap: 8px; overflow-x: auto; padding: 2px 1px 10px; scrollbar-width: thin; }
+    .filter-chip { flex: 0 0 auto; padding: 9px 14px; border: 1px solid #dfcfc1; border-radius: 999px; color: #665a56; background: rgba(255,253,249,.78); font-size: .82rem; font-weight: 700; transition: .18s ease; }
+    .filter-chip:hover { border-color: var(--pink); color: var(--pink-deep); }
+    .filter-chip.is-active { border-color: var(--pink-deep); color: #fff; background: var(--pink-deep); box-shadow: 0 5px 14px rgba(168,79,106,.22); }
+    .category-block { margin-top: 28px; }
+    .category-label { display: flex; align-items: center; gap: 11px; margin: 0 0 13px; color: var(--pink-deep); font-size: .73rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .category-label::after { content: ""; height: 1px; flex: 1; background: linear-gradient(90deg, rgba(201,111,136,.35), transparent); }
+    .recipe-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .recipe-card { position: relative; min-height: 210px; display: flex; flex-direction: column; width: 100%; padding: 20px; overflow: hidden; border: 1px solid var(--line); border-radius: 21px; color: var(--charcoal); background: rgba(255,253,249,.9); text-align: left; box-shadow: 0 8px 25px rgba(95,65,51,.035); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+    .recipe-card::after { content: ""; position: absolute; right: -22px; bottom: -46px; width: 102px; height: 102px; border: 17px solid rgba(234,216,195,.62); border-radius: 50%; }
+    .recipe-card:hover { border-color: #dfacb9; transform: translateY(-4px); box-shadow: var(--shadow); }
+    .recipe-card-head { display: flex; align-items: flex-start; gap: 12px; justify-content: space-between; }
+    .card-kicker { margin: 0 0 8px; color: #7b5f4f; font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    .recipe-card h3 { max-width: calc(100% - 56px); margin: 0; font-family: var(--serif); font-size: 1.45rem; line-height: 1.02; letter-spacing: -.025em; }
+    .card-summary { flex: 1; margin: 13px 0 17px; color: var(--muted); font-size: .84rem; }
+    .ring { --p: 0%; width: 49px; height: 49px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--pink) var(--p), #f0dfdf 0); }
+    .ring::before { content: attr(data-label); display: grid; width: 37px; height: 37px; place-items: center; border-radius: inherit; color: var(--pink-deep); background: var(--white); font-size: .65rem; font-weight: 800; }
+    .card-bottom { position: relative; z-index: 1; }
+    .card-progress-label { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 7px; color: #756964; font-size: .75rem; }
+    .progress-track { height: 6px; overflow: hidden; border-radius: 999px; background: #f0e3d8; }
+    .progress-track span { display: block; width: var(--value); height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--pink), #dfa1af); transition: width .25s ease; }
+    .card-flags { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 5px; margin-top: 13px; }
+    .review-badge { display: inline-flex; align-items: center; width: fit-content; padding: 4px 7px; border: 1px solid #e8c7cd; border-radius: 999px; color: #9d5364; background: #fff2f4; font-size: .65rem; font-weight: 800; letter-spacing: .015em; }
+    .source-badge { display: inline-flex; align-items: center; padding: 4px 7px; border: 1px solid #e4d7c9; border-radius: 999px; color: #87725f; background: #fffaf4; font-size: .65rem; font-weight: 750; }
+    .empty-results { margin-top: 28px; padding: 42px 22px; border: 1px dashed #d7bcb0; border-radius: 20px; color: var(--muted); background: rgba(255,253,249,.56); text-align: center; }
+    .empty-results h3 { color: var(--charcoal); font-family: var(--serif); font-size: 1.65rem; }
+    .text-button { padding: 0; border: 0; color: var(--pink-deep); background: transparent; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+    .recipe-overlay { position: fixed; z-index: 10; inset: 0; display: none; padding: clamp(8px, 2vw, 24px); overflow-y: auto; background: rgba(48,42,41,.52); backdrop-filter: blur(8px); }
+    .recipe-overlay.is-open { display: block; }
+    .recipe-sheet { width: min(1050px, 100%); min-height: min(720px, calc(100vh - 48px)); margin: 0 auto; overflow: hidden; border: 1px solid rgba(255,255,255,.72); border-radius: 28px; background: var(--ivory); box-shadow: 0 32px 70px rgba(36,26,23,.28); }
+    .sheet-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px clamp(18px, 3vw, 29px); border-bottom: 1px solid var(--line); background: rgba(255,253,249,.74); }
+    .sheet-brand { display: inline-flex; align-items: center; gap: 9px; color: var(--pink-deep); font-family: var(--serif); font-weight: 700; }
+    .sheet-brand::before { content: ""; width: 11px; height: 11px; border: 2px solid var(--pink); border-radius: 50% 50% 45% 45%; }
+    .sheet-top-actions { display: flex; align-items: center; gap: 8px; }
+    .prep-exit { min-height: 39px; padding: 8px 11px; border: 1px solid #dfc2c9; border-radius: 10px; color: var(--pink-deep); background: #fff5f6; font-size: .77rem; font-weight: 800; }
+    .sheet-close { width: 45px; height: 45px; display: grid; place-items: center; border: 1px solid #decfc2; border-radius: 50%; color: var(--charcoal); background: var(--white); font-size: 1.24rem; transition: .18s ease; }
+    .sheet-close:hover { border-color: var(--pink); color: var(--pink-deep); }
+    .recipe-inner { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 28px; padding: clamp(21px, 4vw, 44px); }
+    .recipe-main { min-width: 0; }
+    .recipe-meta { min-width: 0; }
+    .sheet-eyebrow { margin-bottom: 11px; color: var(--pink-deep); font-size: .7rem; font-weight: 850; letter-spacing: .15em; text-transform: uppercase; }
+    .recipe-title { margin-bottom: 11px; font-family: var(--serif); font-size: clamp(2.25rem, 5vw, 4rem); line-height: .95; letter-spacing: -.055em; }
+    .source-line { margin: 0; color: #8b7972; font-size: .74rem; }
+    .source-line code { padding: 3px 5px; border-radius: 5px; color: #785a4d; background: #f0e5da; font-family: var(--sans); font-size: inherit; }
+    .beverage-brief { display: flex; flex-wrap: wrap; gap: 7px; margin: 17px 0 12px; }
+    .beverage-brief span { padding: 5px 8px; border: 1px solid #dfd0c1; border-radius: 999px; color: #74615a; background: #fffaf5; font-size: .73rem; font-weight: 750; }
+    .review-panel { margin-top: 16px; padding: 11px 13px; border-left: 3px solid var(--pink); border-radius: 0 10px 10px 0; color: #79515a; background: #fff2f4; font-size: .77rem; }
+    .review-panel strong { color: #9d5364; }
+    .progress-panel { margin-top: 23px; padding: 15px; border: 1px solid #ead7d7; border-radius: 16px; background: #fff9fa; }
+    .progress-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 9px; }
+    .progress-line strong { font-size: .93rem; }
+    .progress-line span { color: var(--pink-deep); font-family: var(--serif); font-size: 1.25rem; font-weight: 800; }
+    .recipe-actions { display: grid; gap: 9px; margin-top: 15px; }
+    .button { min-height: 46px; padding: 10px 14px; border: 1px solid transparent; border-radius: 12px; font-weight: 800; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .button:hover { transform: translateY(-1px); }
+    .button-primary { color: #fff; background: var(--pink-deep); box-shadow: 0 7px 15px rgba(168,79,106,.2); }
+    .button-primary:hover { background: #91425a; }
+    .button-soft { border-color: #e4c9d0; color: var(--pink-deep); background: #fff3f5; }
+    .button-plain { border-color: #ded1c4; color: #645652; background: var(--white); }
+    .button-danger { border-color: #eccfd3; color: #a95362; background: #fff7f7; }
+    .prep-note { margin: 13px 0 0; color: var(--muted); font-size: .72rem; text-align: center; }
+    .steps-heading { display: flex; align-items: end; justify-content: space-between; gap: 10px; margin: 28px 0 9px; }
+    .steps-heading h3 { margin: 0; font-family: var(--serif); font-size: 1.55rem; }
+    .steps-heading span { color: var(--muted); font-size: .75rem; }
+    .step-legend { display: grid; grid-template-columns: 1fr 78px 61px; gap: 8px; padding: 0 12px 7px 60px; color: #776a65; font-size: .65rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .steps-list { display: grid; gap: 9px; }
+    .step-row { display: grid; grid-template-columns: 36px minmax(0,1fr) 78px 61px; align-items: center; gap: 9px; min-height: 60px; padding: 9px 12px; border: 1px solid #e7d9cf; border-radius: 14px; color: var(--charcoal); background: rgba(255,253,249,.83); transition: background .2s ease, border-color .2s ease; }
+    .step-row.is-done { border-color: #ebc9d1; background: #fff8f9; }
+    .step-check { appearance: none; -webkit-appearance: none; width: 31px; height: 31px; margin: 0; border: 2px solid #cdbcb2; border-radius: 10px; background: #fff; display: grid; place-content: center; cursor: pointer; }
+    .step-check::after { content: "✓"; color: #fff; font-size: 20px; font-weight: 900; transform: scale(0); transition: transform .13s ease; }
+    .step-check:checked { border-color: var(--pink); background: var(--pink); }
+    .step-check:checked::after { transform: scale(1); }
+    .step-name { min-width: 0; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: .94rem; font-weight: 650; }
+    .is-done .step-name { color: #7c696a; text-decoration: line-through; text-decoration-color: #d990a3; text-decoration-thickness: 1.5px; }
+    .step-kind { padding: 3px 6px; border-radius: 999px; color: #8a6c68; background: #f3e6dc; font-size: .61rem; font-weight: 800; text-decoration: none; }
+    .step-measure { display: contents; }
+    .step-amount, .step-unit { min-width: 0; text-align: right; font-variant-numeric: tabular-nums; }
+    .step-amount { color: #4d4341; font-weight: 800; }
+    .step-amount.is-missing { min-height: 1.2em; }
+    .step-unit { color: var(--muted); font-size: .82rem; }
+    .variant-box { margin-top: 15px; padding: 15px; border: 1px solid #e5d3ca; border-radius: 15px; background: #fffaf4; }
+    .variant-box h4 { margin: 0 0 6px; font-family: var(--serif); font-size: 1.25rem; }
+    .variant-box p { margin: 0 0 12px; color: var(--muted); font-size: .77rem; }
+    .variant-options { display: flex; flex-wrap: wrap; gap: 7px; }
+    .variant-option { padding: 8px 10px; border: 1px solid #dfcabe; border-radius: 999px; color: #655550; background: var(--white); font-size: .78rem; font-weight: 750; }
+    .variant-option.is-selected { border-color: var(--pink-deep); color: #fff; background: var(--pink-deep); }
+    .variant-option .variant-value { color: inherit; opacity: .76; }
+    .variant-option .review-badge { margin-left: 3px; vertical-align: 1px; }
+    .document-note { display: flex; align-items: flex-start; gap: 8px; margin-top: 13px; padding: 11px 12px; border: 1px solid #ead7d5; border-radius: 12px; color: #76545a; background: #fff9f9; font-size: .79rem; }
+    .document-note strong { color: #9c5967; }
+    .confirm-layer { position: fixed; z-index: 20; inset: 0; display: none; place-items: center; padding: 18px; background: rgba(48,42,41,.45); }
+    .confirm-layer.is-open { display: grid; }
+    .confirm-card { width: min(385px, 100%); padding: 26px; border-radius: 20px; background: #fffaf5; box-shadow: 0 25px 55px rgba(40,27,23,.27); }
+    .confirm-card h3 { margin-bottom: 8px; font-family: var(--serif); font-size: 1.7rem; }
+    .confirm-card p { color: var(--muted); }
+    .confirm-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 20px; }
+    .toast { position: fixed; z-index: 30; left: 50%; bottom: 21px; max-width: calc(100% - 32px); padding: 11px 15px; border-radius: 999px; color: #fff; background: #4d403c; box-shadow: 0 8px 22px rgba(48,42,41,.22); font-size: .83rem; transform: translate(-50%, 90px); opacity: 0; transition: .22s ease; pointer-events: none; }
+    .toast.is-visible { transform: translate(-50%, 0); opacity: 1; }
+
+    .recipe-overlay.is-prep { padding: 0; background: #262120; backdrop-filter: none; }
+    .recipe-overlay.is-prep .recipe-sheet { width: min(900px, 100%); min-height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+    .recipe-overlay.is-prep .recipe-inner { grid-template-columns: 1fr; max-width: 760px; margin: 0 auto; }
+    .recipe-overlay.is-prep .recipe-meta, .recipe-overlay.is-prep .source-line, .recipe-overlay.is-prep .beverage-brief, .recipe-overlay.is-prep .review-panel { display: none; }
+    .recipe-overlay.is-prep .recipe-title { font-size: clamp(2.2rem, 8vw, 4.1rem); }
+    .recipe-overlay.is-prep .sheet-top { position: sticky; z-index: 2; top: 0; }
+    .recipe-overlay.is-prep .step-row { min-height: 72px; }
+    .recipe-overlay.is-prep .step-check { width: 36px; height: 36px; }
+    .recipe-overlay.is-prep .step-name { font-size: 1rem; }
+
+    @media (max-width: 920px) {
+      .recipe-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .continue-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .recipe-inner { grid-template-columns: minmax(0, 1fr) 230px; gap: 20px; }
+    }
+    @media (max-width: 700px) {
+      .shell { padding-top: 17px; }
+      .topbar-note { display: none; }
+      .hero { grid-template-columns: 1fr; min-height: 0; padding: 35px 25px 23px; border-radius: 27px; }
+      .hero-visual { min-height: 175px; transform: scale(.84); transform-origin: center top; margin-bottom: -25px; }
+      h1 { font-size: clamp(3.3rem, 16vw, 4.9rem); }
+      .overview { grid-template-columns: 1fr auto; }
+      .overview-text { grid-column: 1 / -1; grid-row: 2; }
+      .overview-bar { grid-column: 1 / 2; }
+      .overview-number { grid-column: 2; }
+      .section-header { align-items: start; flex-direction: column; }
+      .section-header p { text-align: left; }
+      .continue-grid, .recipe-grid { grid-template-columns: 1fr; }
+      .recipe-card { min-height: 188px; }
+      .recipe-overlay { padding: 0; }
+      .recipe-sheet { min-height: 100vh; border-radius: 0; }
+      .recipe-inner { grid-template-columns: 1fr; padding: 24px 18px 34px; }
+      .recipe-meta { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+      .recipe-meta .progress-panel { grid-column: 1 / -1; margin-top: 0; }
+      .recipe-meta .recipe-actions { margin-top: 0; }
+      .recipe-meta .prep-note { display: none; }
+      .step-legend { grid-template-columns: 1fr 58px 48px; padding-left: 51px; }
+      .step-row { grid-template-columns: 31px minmax(0,1fr) 58px 48px; gap: 7px; padding: 9px; }
+      .step-name { font-size: .86rem; }
+      .step-amount { font-size: .85rem; }
+      .step-unit { font-size: .72rem; }
+      .recipe-overlay.is-prep .step-row { grid-template-columns: 38px minmax(0,1fr) 62px 48px; }
+    }
+    @media (max-width: 390px) {
+      .hero { padding-inline: 20px; }
+      .search-box { padding-left: 13px; }
+      .recipe-meta { grid-template-columns: 1fr; }
+      .recipe-meta .progress-panel { grid-column: auto; }
+      .step-legend { display: none; }
+      .step-row { grid-template-columns: 31px minmax(0,1fr) minmax(63px, auto); }
+      .step-measure { display: flex; grid-column: 3; align-items: baseline; justify-content: flex-end; gap: 4px; }
+      .recipe-overlay.is-prep .step-row { grid-template-columns: 38px minmax(0,1fr) minmax(70px, auto); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-ribbon ribbon-one" aria-hidden="true"></div>
+  <div class="page-ribbon ribbon-two" aria-hidden="true"></div>
+  <main id="app"></main>
+  <div id="recipeOverlay" class="recipe-overlay" aria-hidden="true"></div>
+  <div id="toast" class="toast" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const step = (item, amount = "", unit = "", options = {}) => ({ item, amount: String(amount), unit, review: false, ...options });
+      const categories = [
+        { id: "FIT", label: "FIT", source: "FIT (granola,coco,almendra)" },
+        { id: "Premium", label: "Premium", source: "PRIMIUM" },
+        { id: "Hamburguesas dulces", label: "Hamburguesas dulces", source: "HAMBURGUESAS" },
+        { id: "Sándwich", label: "Sándwich", source: "SANDWICH" },
+        { id: "Cremas", label: "Cremas", source: "CREMAS" },
+        { id: "Bebidas", label: "Bebidas", source: "BEBIDAS" }
+      ];
+
+      const recipes = [
+        {
+          id: "fit-acai", category: "FIT", name: "Acai", sourceTitle: "Acai", sourceContext: "FIT (granola,coco,almendra)",
+          steps: [step("Mezcla Acai", 80), step("Topping", 20), step("Mezcla Acai", 80), step("Fruta", 50), step("Salsa(miel)", 3), step("Topping", 3)]
+        },
+        {
+          id: "fit-yogourt", category: "FIT", name: "Yogourt", sourceTitle: "Yogourt", sourceContext: "FIT (granola,coco,almendra)",
+          reviews: ["La cifra «800» se conserva tal como aparece en el documento."],
+          steps: [step("Yogurt", 80), step("Topping", 20), step("Yogurt", 800, "", { review: true }), step("Fruta", 50), step("Salsa", 3), step("Topping", 3)]
+        },
+        {
+          id: "premium-tres-leches", category: "Premium", name: "Tres leches", sourceTitle: "Tres leches",
+          steps: [step("Pan tres leches", 25), step("Liquido", 32), step("Crema", 40), step("Fruta", 50), step("Pan tres leches", 25), step("Liquido", 32), step("Crema", 40), step("Topping", 3), step("Salsa", 3)]
+        },
+        {
+          id: "premium-crema-dubai", category: "Premium", name: "Crema Dubai", sourceTitle: "Crema Dubai",
+          steps: [step("Fruta", 50), step("Crema pistacho", 40), step("Kataifi", 5), step("Fruta", 50), step("Salsa Chocolate", 3), step("Crema pistacho", 40), step("Kataifi", 5), step("Salsa Chocolate", 3)]
+        },
+        {
+          id: "premium-chocolate-crispy", category: "Premium", name: "Chocolate Crispy", sourceTitle: "Chocolate Crispy",
+          reviews: ["Se conserva la nota literal: «MEZCLA CRISPY 10/10»."],
+          notes: ["MEZCLA CRISPY 10/10"],
+          steps: [step("Mezcla crispy", 10), step("Crema Chocolate", 40), step("Fruta", 50), step("Mezcla crispy", 10), step("Crema Chocolate", 40), step("Salsa Chocolate", 3), step("Topping", 3)]
+        },
+        {
+          id: "premium-crema-ferrero", category: "Premium", name: "Crema Ferrero", sourceTitle: "Crema Ferrero",
+          steps: [step("Crema chocolate", 40), step("Galleta", 10), step("Fruta", 50), step("Salsa Chocolate", 3), step("Crema chocolate", 40), step("Topping", 3), step("Salsa Chocolate", 3), step("Ferrero", 1)]
+        },
+        {
+          id: "premium-crema-rafaelo", category: "Premium", name: "Crema Rafaelo", sourceTitle: "Crema Rafaelo",
+          steps: [step("Crema chocolate", 40), step("Coco", 10), step("Fruta", 50), step("Salsa Chocolate", 3), step("Crema chocolate", 40), step("Salsa Chocolate", 3), step("Rafaelo", 1)]
+        },
+        {
+          id: "hamburguesa-chocolate-vainilla", category: "Hamburguesas dulces", name: "Hamburguesa Chocolate y vainilla", sourceTitle: "Hamburguesa Chocolate y vainilla",
+          steps: [step("Pan", 1), step("Crema", 40), step("Nutella", 15), step("Fruta", 40), step("Salsa", 3)]
+        },
+        {
+          id: "sandwich-pollo-carne", category: "Sándwich", name: "Sándwich pollo y carne", sourceTitle: "Sandwich pollo y carne",
+          reviews: ["«Salsa elegir» se conserva tal como aparece en el documento."],
+          steps: [step("Tapas pan", 2), step("Carne/pollo", 75), step("Rodaja queso", 1), step("Lechuga", 1), step("Rodaja tomate", 3), step("Salsa elegir", 5, "", { review: true })]
+        },
+        {
+          id: "crema-pequeno", category: "Cremas", name: "Cremas · Pequeño", sourceTitle: "CREMAS PEQUEÑO",
+          steps: [step("Crema", 40), step("Galleta", 10), step("Fruta", 40), step("Crema", 60), step("Salsa", 3), step("Topping", 3)]
+        },
+        {
+          id: "crema-mediana", category: "Cremas", name: "Cremas · Medianas", sourceTitle: "CREMAS MEDIANAS",
+          steps: [step("Crema", 40), step("Fruta", 40), step("Crema", 80), step("Galleta", 10), step("Fruta", 40), step("Crema", 60), step("Salsa", 3), step("Topping", 3)]
+        },
+        {
+          id: "crema-grande", category: "Cremas", name: "Cremas · Grandes", sourceTitle: "CREMAS GRANDES",
+          steps: [step("Crema", 40), step("Fruta", 40), step("Crema", 40), step("Galleta", 10), step("Fruta", 40), step("Crema", 60), step("Galleta", 10), step("Fruta", 40), step("Crema", 80), step("Salsa", 3), step("Topping", 3)]
+        },
+        {
+          id: "bebidas-batidos-16onz", category: "Bebidas", name: "Batidos · 16 oz", sourceTitle: "BATIDOS 16onz", vessel: "16 oz",
+          reviews: ["«Leche/Agua», «DETALLE | GR/Tap 6g», los valores con «/» y Mango sin cifra se conservan sin interpretar."],
+          steps: [step("Leche/Agua", 100, "", { review: true }), step("hielo", 220)],
+          variants: {
+            label: "DETALLE", measure: "GR/Tap 6g",
+            options: [
+              step("Mora", "75/6", "", { review: true }), step("Sandia", "120/4", "", { review: true }), step("Mango", "", "", { review: true }),
+              step("Piña", "100/6", "", { review: true }), step("Guanabana", "75/7", "", { review: true }), step("Cas", "120/8", "", { review: true }),
+              step("Maracuya", "50/7", "", { review: true }), step("Papaya", "80/4", "", { review: true }), step("Fresa", "75/7", "", { review: true })
+            ]
+          }
+        },
+        {
+          id: "bebidas-matcha-frio", category: "Bebidas", name: "Matcha frío · 16 oz", sourceTitle: "MATCHA frio 16 onz", vessel: "16 oz",
+          reviews: ["Las referencias «70´», «TAP 6g» y «hielo 1 cucharada» se mantienen como aparecen."],
+          steps: [step("Matcha +disolver", 1), step("Agua caliente 70´", 20, "ml", { review: true }), step("fruta molida", 30), step("hielo 1 cucharada", 220, "", { review: true }), step("leche cremada fria", 200), step("TAP 6g", 1, "", { review: true })]
+        },
+        {
+          id: "bebidas-matcha-caliente", category: "Bebidas", name: "Matcha caliente · 8 oz", sourceTitle: "MATCHA Caliente 8onz", vessel: "8 oz",
+          reviews: ["Las referencias «70´» y «TAP 6g» se mantienen como aparecen."],
+          steps: [step("Matcha +disolver", 1), step("Agua caliente 70´", 20, "ml", { review: true }), step("leche cremada 70´", 200, "", { review: true }), step("TAP 6g", 1, "", { review: true })]
+        },
+        {
+          id: "bebidas-capuchino-caliente", category: "Bebidas", name: "Capuchino caliente · 8 oz", sourceTitle: "CAPUCHINO caliente 8onz", vessel: "8 oz",
+          reviews: ["Las referencias «70´» y «TAP 6g» se mantienen como aparecen."],
+          steps: [step("Expresso", 1), step("Leche cremada 70´", 200, "", { review: true }), step("TAP 6g", 1, "", { review: true })]
+        },
+        {
+          id: "bebidas-cafe-especialidad", category: "Bebidas", name: "Café especialidad negro/leche · 8 oz", sourceTitle: "CAFE ESPECIALIAD NEGRO/LECHE 8onz", vessel: "8 oz",
+          reviews: ["La fórmula «Leche 70´/agua — 160/80» y las referencias de temperatura se conservan sin repartir ni corregir."],
+          steps: [step("cafe especial", 30), step("Agua caliente 90´", 240, "", { review: true }), step("Leche 70´/agua", "160/80", "", { review: true })]
+        },
+        {
+          id: "bebidas-capuchino-frio", category: "Bebidas", name: "Capuchino frío · 16 oz", sourceTitle: "CAPUCHINO frio 16onz", vessel: "16 oz",
+          reviews: ["«TAP 6g» y «Hielo 1.5 cuchardas — 330» se mantienen como aparecen."],
+          steps: [step("Expresso todo licuadora", 1), step("Leche", 150), step("TAP 6g", 3, "", { review: true }), step("Hielo 1.5 cuchardas", 330, "", { review: true }), step("Chantilly", 80), step("Topping", 3)]
+        },
+        {
+          id: "bebidas-cafe-negro-leche-8", category: "Bebidas", name: "Café negro/leche · 8noz/240ml", sourceTitle: "CAFE NEGRO/LECHE 8noz/240ml", vessel: "8noz/240ml",
+          reviews: ["El tamaño «8noz/240ml» y las referencias «70´»/«90´» se conservan como aparecen."],
+          steps: [step("cafe", 15), step("Leche 70´", 80, "", { review: true }), step("Agua caliente 90´", 160, "", { review: true })]
+        },
+        {
+          id: "bebidas-cafe-negro-leche-12", category: "Bebidas", name: "Café negro/leche · 12noz/355ml", sourceTitle: "CAFE NEGRO/LECHE 12noz/355ml", vessel: "12noz/355ml",
+          reviews: ["El tamaño «12noz/355ml» y las referencias «70´»/«90´» se conservan como aparecen."],
+          steps: [step("cafe", 25), step("Leche 70´", 100, "", { review: true }), step("Agua caliente 90´", 255, "", { review: true })]
+        },
+        {
+          id: "bebidas-ice-coffee-latte", category: "Bebidas", name: "Ice Coffee Latte · 16 oz", sourceTitle: "ICE COFFE LATE 16onz", vessel: "16 oz",
+          steps: [step("Expresso", 1), step("Leche", 200), step("azucar", 11), step("Hielo", 150)]
+        },
+        {
+          id: "bebidas-chocolate-caliente", category: "Bebidas", name: "Chocolate caliente · 8 oz", sourceTitle: "CHOCOLATE CALIENTE 8onz", vessel: "8 oz",
+          reviews: ["Las referencias «70´» y «90´» se mantienen como aparecen."],
+          steps: [step("Cocoa licuado todo", 85), step("Leche en polvo", 20), step("Leche liquida 70´", 200, "", { review: true }), step("Agua 90´", 150, "", { review: true })]
+        },
+        {
+          id: "bebidas-chocolate-frio", category: "Bebidas", name: "Chocolate frío · 12 oz", sourceTitle: "CHOCOLATE FRIO 12onz", vessel: "12 oz",
+          reviews: ["«Hielo 1/2 cucharada — 120» se mantiene como aparece."],
+          steps: [step("Cocoa", 75), step("Leche en polvo", 15), step("Leche liquida", 200), step("Hielo 1/2 cucharada", 120, "", { review: true }), step("Chantilly", 85), step("Salsa", 3)]
+        }
+      ];
+
+      const STORAGE_KEY = "dulce-crema-recetario-progress-v1";
+      let saved = loadSaved();
+      let selectedCategory = "Todas";
+      let query = "";
+      let activeRecipeId = null;
+      let prepMode = false;
+      let lastFocusedElement = null;
+      let resetInvoker = null;
+      let toastTimer = null;
+
+      function loadSaved() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+        } catch (error) {
+          return {};
+        }
+      }
+
+      function persist() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (error) { /* La interfaz sigue funcionando aunque el navegador bloquee almacenamiento. */ }
+      }
+
+      function recipeById(id) { return recipes.find(recipe => recipe.id === id); }
+      function getRecord(id) { return (saved && saved[id]) || { checked: {}, updatedAt: 0, variant: null }; }
+      function getSteps(recipe) {
+        const base = recipe.steps.slice();
+        if (recipe.variants) {
+          const record = getRecord(recipe.id);
+          const choice = recipe.variants.options.find(option => option.item === record.variant);
+          base.push(choice || step("Detalle", "", "", { review: true, kind: "Elegir variante", isChoice: true }));
+        }
+        return base;
+      }
+      function progress(recipe) {
+        const record = getRecord(recipe.id);
+        const total = getSteps(recipe).length;
+        const done = Array.from({ length: total }, (_, index) => Boolean(record.checked && record.checked[index])).filter(Boolean).length;
+        return { done: Math.min(done, total), total, percent: total ? Math.round(Math.min(done, total) / total * 100) : 0 };
+      }
+      function isComplete(recipe) { const p = progress(recipe); return p.total > 0 && p.done === p.total; }
+      function normalize(value) { return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(); }
+      function recipeSearchText(recipe) {
+        const pieces = [recipe.name, recipe.sourceTitle, recipe.category, recipe.vessel, recipe.sourceContext];
+        recipe.steps.forEach(item => pieces.push(item.item, item.amount, item.unit));
+        if (recipe.variants) recipe.variants.options.forEach(item => pieces.push(item.item, item.amount, item.unit));
+        return normalize(pieces.join(" "));
+      }
+      function categoryInfo(id) { return categories.find(category => category.id === id); }
+      function hasReview(recipe) { return Boolean((recipe.reviews && recipe.reviews.length) || recipe.steps.some(item => item.review) || (recipe.variants && recipe.variants.options.some(item => item.review))); }
+      function escapeHTML(value) {
+        return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" })[char]);
+      }
+      function filteredRecipes() {
+        const needle = normalize(query.trim());
+        return recipes.filter(recipe => (selectedCategory === "Todas" || recipe.category === selectedCategory) && (!needle || recipeSearchText(recipe).includes(needle)));
+      }
+      function focusSoon(selector) {
+        requestAnimationFrame(() => document.querySelector(selector)?.focus());
+      }
+      function focusMatchingData(datasetKey, value) {
+        requestAnimationFrame(() => [...document.querySelectorAll(`[data-${datasetKey}]`)].find(element => element.dataset[datasetKey] === value)?.focus());
+      }
+
+      function appTemplate() {
+        const completed = recipes.filter(isComplete).length;
+        const overallPercent = recipes.length ? Math.round(completed / recipes.length * 100) : 0;
+        const visibleCount = filteredRecipes().length;
+        return `
+          <div class="shell">
+            <header class="topbar">
+              <div class="mini-brand">Dulce Crema</div>
+              <div class="topbar-note">Recetario operativo</div>
+            </header>
+            <section class="hero" aria-labelledby="pageTitle">
+              <div>
+                <p class="eyebrow">Recetario operativo</p>
+                <h1 id="pageTitle">Dulce <span>Crema</span></h1>
+                <p class="hero-copy">Recetas que se preparan con amor.</p>
+                <label class="search-box" for="recipeSearch">
+                  <span class="search-icon" aria-hidden="true">⌕</span>
+                  <span class="visually-hidden">Buscar por receta o ingrediente</span>
+                  <input id="recipeSearch" type="search" autocomplete="off" placeholder="Busca una receta o ingrediente" value="${escapeHTML(query)}">
+                  <button class="clear-search ${query ? "is-visible" : ""}" type="button" data-action="clear-search" aria-label="Limpiar búsqueda">×</button>
+                </label>
+              </div>
+              <div class="hero-visual" aria-hidden="true">
+                <div class="visual-label">capas de cariño</div>
+                <div class="dessert-plate"><div class="cream-swell"></div></div>
+                <div class="berry berry-one"></div><div class="berry berry-two"></div>
+              </div>
+            </section>
+            <section class="dashboard" aria-label="Progreso general">
+              <div class="overview">
+                <h2>Tu avance</h2>
+                <p class="overview-text">Recetas finalizadas en este dispositivo.</p>
+                <div class="overview-bar" style="--value:${overallPercent}%" aria-hidden="true"><span></span></div>
+                <div class="overview-number" aria-label="${completed} de ${recipes.length} recetas completadas">${completed}/${recipes.length}</div>
+              </div>
+              ${continueTemplate()}
+            </section>
+            <section class="recipe-library" id="recipes" aria-labelledby="recipesTitle">
+              <div class="section-header">
+                <div><p class="eyebrow">Preparar con claridad</p><h2 id="recipesTitle">Recetas</h2></div>
+                <p>${query ? "Resultados para la búsqueda actual" : "Selecciona una receta para comenzar"}</p>
+              </div>
+              <p class="visually-hidden" id="searchStatus" role="status" aria-live="polite">${visibleCount} ${visibleCount === 1 ? "receta encontrada" : "recetas encontradas"}.</p>
+              <nav class="filter-row" aria-label="Filtrar recetas por categoría">
+                <button class="filter-chip ${selectedCategory === "Todas" ? "is-active" : ""}" type="button" data-category="Todas" aria-pressed="${selectedCategory === "Todas"}">Todas</button>
+                ${categories.map(category => `<button class="filter-chip ${selectedCategory === category.id ? "is-active" : ""}" type="button" data-category="${escapeHTML(category.id)}" aria-pressed="${selectedCategory === category.id}">${escapeHTML(category.label)}</button>`).join("")}
+              </nav>
+              ${libraryTemplate()}
+            </section>
+          </div>`;
+      }
+
+      function continueTemplate() {
+        const inProgress = recipes
+          .filter(recipe => { const p = progress(recipe); return p.done > 0 && p.done < p.total; })
+          .sort((a, b) => getRecord(b.id).updatedAt - getRecord(a.id).updatedAt)
+          .slice(0, 3);
+        return `<section class="continue-section" aria-labelledby="continueTitle">
+          <div class="section-header"><h2 id="continueTitle">Continuar preparando</h2><p>Retoma una receta en curso.</p></div>
+          ${inProgress.length ? `<div class="continue-grid">${inProgress.map(recipe => {
+            const p = progress(recipe);
+            return `<button class="continue-card" type="button" data-open-recipe="${recipe.id}"><span class="mini-ring" style="--p:${p.percent}%" aria-hidden="true"></span><span><strong>${escapeHTML(recipe.name)}</strong><span>${p.done} de ${p.total} completados · ${p.percent}%</span></span></button>`;
+          }).join("")}</div>` : `<div class="empty-continue">Cuando marques el primer paso de una receta, aparecerá aquí para retomarla sin perder el avance.</div>`}
+        </section>`;
+      }
+
+      function libraryTemplate() {
+        const visible = filteredRecipes();
+        if (!visible.length) {
+          return `<div class="empty-results"><h3>No encontramos esa receta</h3><p>Prueba con otro ingrediente o limpia los filtros.</p><button type="button" class="text-button" data-action="reset-filters">Mostrar todas las recetas</button></div>`;
+        }
+        const ids = selectedCategory === "Todas" ? categories.map(category => category.id) : [selectedCategory];
+        return ids.map(categoryId => {
+          const list = visible.filter(recipe => recipe.category === categoryId);
+          if (!list.length) return "";
+          const category = categoryInfo(categoryId);
+          return `<section class="category-block" aria-labelledby="cat-${categoryId.replace(/[^a-z0-9]/gi, "")}">
+            <h3 id="cat-${categoryId.replace(/[^a-z0-9]/gi, "")}" class="category-label">${escapeHTML(category.label)}</h3>
+            <div class="recipe-grid">${list.map(cardTemplate).join("")}</div>
+          </section>`;
+        }).join("");
+      }
+
+      function cardTemplate(recipe) {
+        const p = progress(recipe);
+        const cardStepText = recipe.variants ? `${p.total} pasos · ${recipe.variants.options.length} variantes` : `${p.total} pasos`;
+        const cardAccessible = `Abrir receta ${recipe.name}. ${cardStepText}. ${p.done} de ${p.total} completados, ${p.percent}%.${recipe.vessel ? ` Vaso ${recipe.vessel}.` : ""}${hasReview(recipe) ? " Revisar receta." : ""}`;
+        return `<button class="recipe-card" type="button" data-open-recipe="${recipe.id}" aria-label="${escapeHTML(cardAccessible)}">
+          <div class="recipe-card-head">
+            <div><p class="card-kicker">${escapeHTML(categoryInfo(recipe.category).label)}</p><h3>${escapeHTML(recipe.name)}</h3></div>
+            <span class="ring" style="--p:${p.percent}%" data-label="${p.percent}%" aria-hidden="true"></span>
+          </div>
+          <p class="card-summary">${cardStepText} en el orden indicado.</p>
+          <div class="card-bottom"><div class="card-progress-label"><span>${p.done} de ${p.total} completados</span><span>${p.percent}%</span></div><div class="progress-track" style="--value:${p.percent}%"><span></span></div></div>
+          <div class="card-flags">${hasReview(recipe) ? `<span class="review-badge">Revisar receta</span>` : ""}${recipe.vessel ? `<span class="source-badge">Vaso · ${escapeHTML(recipe.vessel)}</span>` : ""}</div>
+        </button>`;
+      }
+
+      function beverageTags(recipe) {
+        if (recipe.category !== "Bebidas") return "";
+        const all = getSteps(recipe);
+        const tags = [];
+        if (recipe.vessel) tags.push(`Vaso: ${recipe.vessel}`);
+        if (all.some(item => normalize(item.item).includes("hielo"))) tags.push("Hielo indicado");
+        if (all.some(item => /leche|agua/.test(normalize(item.item)))) tags.push("Leche/agua indicada");
+        if (all.some(item => normalize(item.item).includes("topping"))) tags.push("Topping indicado");
+        return tags.length ? `<div class="beverage-brief" aria-label="Detalles de bebida">${tags.map(tag => `<span>${escapeHTML(tag)}</span>`).join("")}</div>` : "";
+      }
+
+      function kindFor(item) {
+        const value = normalize(item.item);
+        if (value.includes("hielo")) return "Hielo";
+        if (value.includes("leche") || value.includes("agua")) return "Leche/agua";
+        if (value.includes("topping")) return "Topping";
+        if (value.includes("salsa")) return "Salsa";
+        return item.kind || "";
+      }
+
+      function stepTemplate(recipe, item, index) {
+        const record = getRecord(recipe.id);
+        const checked = Boolean(record.checked && record.checked[index]);
+        const type = kindFor(item);
+        const amount = item.amount;
+        const unit = item.unit || "—";
+        const itemLabel = item.isChoice ? "Detalle: elige una variante" : item.item;
+        const checkLabel = item.isChoice ? "Elige una variante para continuar." : `Marcar ${itemLabel}. Cantidad ${amount || "no indicada"}. Unidad ${unit === "—" ? "no indicada" : unit}.${item.review ? " Revisar receta." : ""}`;
+        return `<label class="step-row ${checked ? "is-done" : ""}">
+          <input class="step-check" type="checkbox" data-step-recipe="${recipe.id}" data-step-index="${index}" ${checked ? "checked" : ""} ${item.isChoice ? "disabled" : ""} aria-label="${escapeHTML(checkLabel)}">
+          <span class="step-name">${escapeHTML(itemLabel)}${type ? `<span class="step-kind">${escapeHTML(type)}</span>` : ""}${item.review ? `<span class="review-badge">Revisar receta</span>` : ""}</span>
+          <span class="step-measure"><span class="step-amount ${amount === "" ? "is-missing" : ""}">${escapeHTML(amount)}</span><span class="step-unit">${escapeHTML(unit)}</span></span>
+        </label>`;
+      }
+
+      function variantTemplate(recipe) {
+        if (!recipe.variants) return "";
+        const current = getRecord(recipe.id).variant;
+        return `<section class="variant-box" aria-labelledby="variantHeading">
+          <h4 id="variantHeading">Variantes</h4>
+          <p><strong>${escapeHTML(recipe.variants.label)}</strong> <span class="source-badge">${escapeHTML(recipe.variants.measure || "")}</span> · elige el detalle a preparar.</p>
+          <div class="variant-options">${recipe.variants.options.map(option => `<button type="button" class="variant-option ${option.item === current ? "is-selected" : ""}" data-variant-recipe="${recipe.id}" data-variant="${escapeHTML(option.item)}" aria-pressed="${option.item === current}">${escapeHTML(option.item)} <span class="variant-value">${escapeHTML(option.amount)}</span>${option.review ? `<span class="review-badge">Revisar receta</span>` : ""}</button>`).join("")}</div>
+        </section>`;
+      }
+
+      function renderRecipe() {
+        const overlay = document.getElementById("recipeOverlay");
+        const app = document.getElementById("app");
+        if (!activeRecipeId) {
+          overlay.className = "recipe-overlay";
+          overlay.innerHTML = "";
+          overlay.setAttribute("aria-hidden", "true");
+          app.inert = false;
+          app.removeAttribute?.("aria-hidden");
+          document.body.style.overflow = "";
+          return;
+        }
+        const recipe = recipeById(activeRecipeId);
+        const p = progress(recipe);
+        const displaySteps = getSteps(recipe);
+        const reviewText = recipe.reviews && recipe.reviews.length ? recipe.reviews.join(" ") : "";
+        overlay.className = `recipe-overlay is-open ${prepMode ? "is-prep" : ""}`;
+        overlay.setAttribute("aria-hidden", "false");
+        app.inert = true;
+        app.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "hidden";
+        overlay.innerHTML = `<article class="recipe-sheet" role="dialog" aria-modal="true" aria-labelledby="recipeTitle">
+          <header class="sheet-top"><div class="sheet-brand">Dulce Crema</div><div class="sheet-top-actions">${prepMode ? `<button class="prep-exit" type="button" data-action="toggle-prep">Salir del modo preparación</button>` : ""}<button class="sheet-close" type="button" data-action="close-recipe" aria-label="Cerrar receta">×</button></div></header>
+          <div class="recipe-inner">
+            <div class="recipe-main">
+              <p class="sheet-eyebrow">${escapeHTML(categoryInfo(recipe.category).label)} · preparación</p>
+              <h2 id="recipeTitle" class="recipe-title">${escapeHTML(recipe.name)}</h2>
+              ${recipe.sourceTitle !== recipe.name ? `<p class="source-line">Texto fuente: <code>${escapeHTML(recipe.sourceTitle)}</code></p>` : ""}
+              ${beverageTags(recipe)}
+              ${reviewText ? `<div class="review-panel"><strong>Revisar receta.</strong> ${escapeHTML(reviewText)}</div>` : ""}
+              ${variantTemplate(recipe)}
+              <div class="steps-heading"><h3>Orden de armado</h3><span>${displaySteps.length} ${displaySteps.length === 1 ? "paso" : "pasos"}</span></div>
+              <div class="step-legend" aria-hidden="true"><span>Ingrediente / acción</span><span>Cantidad</span><span>Unidad</span></div>
+              <div class="steps-list">${displaySteps.map((item, index) => stepTemplate(recipe, item, index)).join("")}</div>
+              ${(recipe.notes || []).map(note => `<div class="document-note"><span class="review-badge">Revisar receta</span><span><strong>Nota del documento:</strong> ${escapeHTML(note)}</span></div>`).join("")}
+            </div>
+            <aside class="recipe-meta">
+              <div class="progress-panel"><div class="progress-line"><strong>${p.done} de ${p.total} completados</strong><span>${p.percent}%</span></div><div class="progress-track" style="--value:${p.percent}%"><span></span></div></div>
+              <div class="recipe-actions">
+                <button class="button button-primary" type="button" data-action="mark-all" data-recipe="${recipe.id}">Marcar todo</button>
+                <button class="button button-soft" type="button" data-action="toggle-prep">${prepMode ? "Salir del modo preparación" : "Modo preparación"}</button>
+                <button class="button button-danger" type="button" data-action="ask-reset" data-recipe="${recipe.id}">Reiniciar receta</button>
+              </div>
+              <p class="prep-note">El progreso se guarda automáticamente en este dispositivo.</p>
+            </aside>
+          </div>
+        </article>`;
+      }
+
+      function renderAll() {
+        document.getElementById("app").innerHTML = appTemplate();
+        renderRecipe();
+      }
+
+      function setStep(recipeId, index, checked) {
+        const current = getRecord(recipeId);
+        const record = { ...current, checked: { ...(current.checked || {}) }, updatedAt: Date.now() };
+        if (checked) record.checked[index] = true; else delete record.checked[index];
+        saved[recipeId] = record;
+        persist();
+      }
+
+      function setVariant(recipeId, variant) {
+        const current = getRecord(recipeId);
+        const recipe = recipeById(recipeId);
+        saved[recipeId] = { ...current, variant, checked: { ...(current.checked || {}) }, updatedAt: Date.now() };
+        if (current.variant !== variant) delete saved[recipeId].checked[recipe.steps.length];
+        persist();
+      }
+
+      function markAll(recipeId) {
+        const recipe = recipeById(recipeId);
+        const record = getRecord(recipeId);
+        if (recipe.variants && !record.variant) {
+          showToast("Elige una variante antes de marcar todo.");
+          return;
+        }
+        const all = {};
+        getSteps(recipe).forEach((_, index) => { all[index] = true; });
+        saved[recipeId] = { ...record, checked: all, updatedAt: Date.now() };
+        persist();
+        showToast("Receta marcada como completada.");
+      }
+
+      function openRecipe(id, wantPrep = false) {
+        lastFocusedElement = document.activeElement;
+        activeRecipeId = id;
+        prepMode = wantPrep;
+        renderRecipe();
+        requestAnimationFrame(() => document.querySelector(".sheet-close")?.focus());
+      }
+
+      function closeRecipe() {
+        activeRecipeId = null;
+        prepMode = false;
+        renderRecipe();
+        if (lastFocusedElement && typeof lastFocusedElement.focus === "function") lastFocusedElement.focus();
+      }
+
+      function showResetConfirm(recipeId) {
+        resetInvoker = document.activeElement;
+        const overlay = document.getElementById("recipeOverlay");
+        overlay.insertAdjacentHTML("beforeend", `<div class="confirm-layer is-open" role="dialog" aria-modal="true" aria-labelledby="resetTitle"><div class="confirm-card"><h3 id="resetTitle">¿Reiniciar receta?</h3><p>Se borrarán los checks de esta receta en este dispositivo.</p><div class="confirm-actions"><button class="button button-plain" type="button" data-action="cancel-reset">Cancelar</button><button class="button button-danger" type="button" data-action="confirm-reset" data-recipe="${recipeId}">Sí, reiniciar</button></div></div></div>`);
+        requestAnimationFrame(() => document.querySelector("[data-action='cancel-reset']")?.focus());
+      }
+
+      function hideResetConfirm(restoreFocus = true) {
+        document.querySelector(".confirm-layer")?.remove();
+        if (restoreFocus && resetInvoker && typeof resetInvoker.focus === "function") requestAnimationFrame(() => resetInvoker.focus());
+        resetInvoker = null;
+      }
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("is-visible");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2600);
+      }
+
+      document.addEventListener("input", event => {
+        if (event.target.id === "recipeSearch") {
+          query = event.target.value;
+          renderAll();
+          const field = document.getElementById("recipeSearch");
+          field.focus();
+          field.setSelectionRange(query.length, query.length);
+        }
+      });
+
+      document.addEventListener("change", event => {
+        const control = event.target.closest("[data-step-recipe]");
+        if (!control) return;
+        const recipeId = control.dataset.stepRecipe;
+        const stepIndex = control.dataset.stepIndex;
+        setStep(recipeId, Number(stepIndex), control.checked);
+        renderAll();
+        focusSoon(`[data-step-recipe="${recipeId}"][data-step-index="${stepIndex}"]`);
+      });
+
+      document.addEventListener("click", event => {
+        const openButton = event.target.closest("[data-open-recipe]");
+        if (openButton) { openRecipe(openButton.dataset.openRecipe); return; }
+        const categoryButton = event.target.closest("[data-category]");
+        if (categoryButton) { selectedCategory = categoryButton.dataset.category; renderAll(); focusMatchingData("category", selectedCategory); return; }
+        const variantButton = event.target.closest("[data-variant-recipe]");
+        if (variantButton) { setVariant(variantButton.dataset.variantRecipe, variantButton.dataset.variant); renderAll(); focusMatchingData("variant", variantButton.dataset.variant); return; }
+        const actionButton = event.target.closest("[data-action]");
+        if (!actionButton) return;
+        const action = actionButton.dataset.action;
+        if (action === "clear-search") { query = ""; renderAll(); document.getElementById("recipeSearch")?.focus(); }
+        if (action === "reset-filters") { query = ""; selectedCategory = "Todas"; renderAll(); focusSoon("#recipeSearch"); }
+        if (action === "close-recipe") closeRecipe();
+        if (action === "mark-all") { markAll(actionButton.dataset.recipe); renderAll(); focusSoon(`[data-action="mark-all"][data-recipe="${actionButton.dataset.recipe}"]`); }
+        if (action === "toggle-prep") { prepMode = !prepMode; renderRecipe(); requestAnimationFrame(() => document.querySelector("[data-action='toggle-prep']")?.focus()); }
+        if (action === "ask-reset") showResetConfirm(actionButton.dataset.recipe);
+        if (action === "cancel-reset") hideResetConfirm();
+        if (action === "confirm-reset") {
+          const recipeId = actionButton.dataset.recipe;
+          const existing = getRecord(recipeId);
+          saved[recipeId] = { ...existing, checked: {}, updatedAt: Date.now() };
+          persist();
+          hideResetConfirm(false);
+          showToast("Receta reiniciada.");
+          renderAll();
+          focusSoon(`[data-step-recipe="${recipeId}"][data-step-index="0"]`);
+        }
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          if (document.querySelector(".confirm-layer")) { hideResetConfirm(); return; }
+          if (activeRecipeId && prepMode) { prepMode = false; renderRecipe(); focusSoon("[data-action='toggle-prep']"); return; }
+          if (activeRecipeId) closeRecipe();
+        }
+        if (event.key !== "Tab" || !activeRecipeId) return;
+        const dialog = document.querySelector(".confirm-layer.is-open") || document.querySelector(".recipe-sheet");
+        if (!dialog) return;
+        const focusable = [...dialog.querySelectorAll("button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex='-1'])")].filter(el => el.offsetParent !== null);
+        if (!focusable.length) return;
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if (!dialog.contains(document.activeElement)) { event.preventDefault(); first.focus(); }
+        else if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      });
+
+      renderAll();
+    })();
+  </script>
+</body>
+</html>
